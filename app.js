@@ -68,7 +68,7 @@ mongoose.connect(MONGODB_URI)
         });
         user.save();
       }
-      console.log('Current user:', `name: ${user.name}, email: ${user.email}, _id: ${user._id}`);
+      console.log('Current user:', `email: ${user.email}, _id: ${user._id}`);
     });
     app.listen(PORT, process.env.IP, () => {
       console.log('Server started on port', PORT);

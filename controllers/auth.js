@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const private = require('../private/private.js');
 
 exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
@@ -17,7 +18,7 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById('5bab316ce0a7c75f783cb8a8')
+  User.findById(private.superUserId)
     .then(user => {
       req.session.isLoggedIn = true;
       req.session.user = user;

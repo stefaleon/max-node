@@ -41,7 +41,10 @@ app.use(session({
 
 
 app.use((req, res, next) => {
-  User.findById(private.superUserId)
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then(user => {
       req.user = user;
       next();
@@ -49,27 +52,17 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 
+
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
 app.use(errorController.get404);
 
-mongoose.connect(MONGODB_URI)
+mongoose
+  .connect(MONGODB_URI)
   .then(result => {
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: private.superUserName,
-          email: private.superUserEmail,
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-      console.log('Current user:', `email: ${user.email}, _id: ${user._id}`);
-    });
     app.listen(PORT, process.env.IP, () => {
       console.log('Server started on port', PORT);
     });
